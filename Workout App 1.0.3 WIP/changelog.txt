@@ -1,0 +1,16 @@
+--1.0.1--
+No changes from original submitted as final project for python course.
+Allows text input of Workout, Set number, Reps per set and weight.
+Also allows for a search of database file using yyyy-mm-dd format, opens new window with table of data.
+
+--1.0.2--
+* Added dropdown menu for select workout field
+* Workouts added to list at line 142, may be subject to changes workouts added (Run, Bench-Press, Squat)
+* Set minimum window size for the search pop up
+* Set icon for search window pop up
+* Centered data return text in search window
+
+--1.0.3--
+WIP
+Add huge workout list to the dropdown list, try to beat new workouts before I get to them.
+Add while loop to change the text for jogging or if's or something

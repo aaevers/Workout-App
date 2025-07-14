@@ -1,0 +1,5 @@
+--1.0.1--
+No changes from original submitted as final project for python course.
+Allows text input of Workout, Set number, Reps per set and weight.
+Also allows for a search of database file using yyyy-mm-dd format, opens new window with table of data.
+
