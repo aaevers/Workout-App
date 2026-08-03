@@ -1,11 +1,3 @@
-"""
-* Name         : main.py
-* Author       : Aiden Evers
-* Created      : 7/18/24
-* Course       : CIS189
-* IDE          : VSCode
-* Description  : Program that gathers exercise information and inputs it in a database, then is later recalled.  
-"""
 #Import section
 import tkinter as tk
 import datetime
