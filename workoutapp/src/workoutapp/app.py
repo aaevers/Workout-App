@@ -6,6 +6,7 @@ import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
 import sqlite3
+from datetime import datetime
 
 def greeting(name):
         if name:
@@ -21,10 +22,22 @@ class WorkoutApp(toga.App):
         We then create a main window (with a name matching the app), and
         show the main window.
         """
+
+        #Box Creation Section
         main_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e"))
+        header_box = toga.Box(style=Pack(direction=COLUMN, background_color="#d6c724c1"))
+
+
+        #Widget Creation Section
+        header_label = toga.Label(f"Today - {datetime.now().strftime("%b %d %Y")}", style=Pack(font_size=24, font_weight="bold", padding=10, color="#182375"))
+
+
+        #Alt Box Build Section
+        header_box.add(header_label)
 
         
-
+        #Main Box Build Section
+        main_box.add(header_box)
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = main_box
         self.main_window.show()
