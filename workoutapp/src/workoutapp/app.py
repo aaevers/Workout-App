@@ -30,6 +30,7 @@ class WorkoutApp(toga.App):
 
         #Widget Creation Section
         header_label = toga.Label(f"Today - {datetime.now().strftime("%b %d %Y")}", style=Pack(font_size=24, font_weight="bold", padding=10, color="#182375"))
+        edit_button = toga.Button("Edit", on_press=self.say_hello, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
 
 
         #Alt Box Build Section
@@ -38,6 +39,7 @@ class WorkoutApp(toga.App):
         
         #Main Box Build Section
         main_box.add(header_box)
+        main_box.add(edit_button)
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = main_box
         self.main_window.show()
