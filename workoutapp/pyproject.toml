@@ -14,6 +14,7 @@ formal_name = "WorkoutApp"
 description = "My first application"
 long_description = """More details about the app should go here.
 """
+icon = "icons/workoutapp"
 sources = [
     "src/workoutapp",
 ]
