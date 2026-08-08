@@ -70,23 +70,24 @@ class WorkoutApp(toga.App):
         #Widget Creation Section
         exit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
         add_wo_label = toga.Label("Add workouts here, use workout name, area of body", style=Pack(font_size=24, font_weight="bold", padding=10, color="#182375"))
-        add_wo_name = toga.TextInput(placeholder="Workout Name", style=Pack(font_size=18, padding=10, color="#182375"))
-        add_wo_area = toga.Selection(items=["Upper", "Lower", "Cardio"], style=Pack(font_size=18, padding=10, color="#182375"))
-        add_wo_button = toga.Button("Accept?", on_press=self.add_workout(add_wo_name.value, add_wo_area.value), style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
+        self.add_wo_name = toga.TextInput(placeholder="Workout Name", style=Pack(font_size=18, padding=10, color="#ECEEF8"))
+        self.add_wo_area = toga.Selection(items=["Upper", "Lower", "Cardio"], style=Pack(font_size=18, padding=10, color="#182375"))
+        add_wo_button = toga.Button("Accept?", on_press=self.add_workout, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
 
         #Box Build Section
         add_workout_box.add(exit_button)
         add_workout_box.add(add_wo_label)
-        add_workout_box.add(add_wo_name)
-        add_workout_box.add(add_wo_area)
+        add_workout_box.add(self.add_wo_name)
+        add_workout_box.add(self.add_wo_area)
         add_workout_box.add(add_wo_button)
 
         #Window Build Section
         self.main_window.content = add_workout_box
 
-    def add_workout(self, name, area):
-        self.cur.execute("INSERT INTO workouts VALUES(?, ?)", (name, area))
+    async def add_workout(self, widget):
+        self.cur.execute("INSERT INTO workouts VALUES(?, ?)", (self.add_wo_name.value, self.add_wo_area.value)) #Add error handling, needs to have a name and area...
         self.conn.commit()
+        await self.main_window.info_dialog("", "Success!")
 
 def main():
     return WorkoutApp()
