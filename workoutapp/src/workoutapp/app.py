@@ -21,7 +21,9 @@ class WorkoutApp(toga.App):
         #Database Connection Section
         self.conn = sqlite3.connect(self.paths.data / "workoutapp.db")
         self.cur = self.conn.cursor()
-        self.cur.execute("CREATE TABLE IF NOT EXISTS workouts(name TEXT NOT NULL UNIQUE CHECK(length(trim(name)) > 0)), area TEXT NOT NULL")
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS workouts(
+            name TEXT NOT NULL UNIQUE CHECK(length(trim(name)) > 0), 
+            area TEXT NOT NULL)""")
 
         #Box Creation Section
         self.main_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e")) #Using self.main_box so I can access it in other methods, not using self, widget argument in this method as no widget would passthrough on startup
@@ -87,7 +89,7 @@ class WorkoutApp(toga.App):
     async def add_workout(self, widget):
         self.cur.execute("INSERT INTO workouts VALUES(?, ?)", (self.add_wo_name.value, self.add_wo_area.value)) #Add error handling, needs to warn when duplicate name or null.
         self.conn.commit()
-        await self.main_window.info_dialog("", "Success!")
+        await self.main_window.info_dialog("", "Success!") #sqlite3.IntegrityError: UNIQUE constraint failed: workouts.name    use this for the error handling
 
 def main():
     return WorkoutApp()
