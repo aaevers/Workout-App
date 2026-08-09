@@ -87,9 +87,13 @@ class WorkoutApp(toga.App):
         self.main_window.content = add_workout_box
 
     async def add_workout(self, widget):
-        self.cur.execute("INSERT INTO workouts VALUES(?, ?)", (self.add_wo_name.value, self.add_wo_area.value)) #Add error handling, needs to warn when duplicate name or null.
+        try:
+            self.cur.execute("INSERT INTO workouts VALUES(?, ?)", (self.add_wo_name.value, self.add_wo_area.value))
+        except sqlite3.IntegrityError:
+            await self.main_window.info_dialog("Error", "Workout name must be unique and not empty.")
+            return
         self.conn.commit()
-        await self.main_window.info_dialog("", "Success!") #sqlite3.IntegrityError: UNIQUE constraint failed: workouts.name    use this for the error handling
+        await self.main_window.info_dialog("Success!", "Workout added successfully!")
 
 def main():
     return WorkoutApp()
