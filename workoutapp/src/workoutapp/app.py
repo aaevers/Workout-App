@@ -16,6 +16,8 @@ def greeting(name):
 
 class WorkoutApp(toga.App):
 
+
+#MARK: Main / Startup Method
     def startup(self):
 
         #Database Connection Section
@@ -45,6 +47,11 @@ class WorkoutApp(toga.App):
         self.main_window.content = self.main_box
         self.main_window.show()
 
+
+#MARK: View / Window Methods
+
+
+    #Edit window, used for editing workouts using the list from DB
     def show_edit_view(self, widget):
         
         #Box Creation Section
@@ -61,9 +68,8 @@ class WorkoutApp(toga.App):
         #Window Build Section
         self.main_window.content = edit_box
 
-    def go_home(self, widget):
-        self.main_window.content = self.main_box
-
+    
+    #Add workout window, used for adding workouts to the DB
     def add_workout_view(self, widget):
 
         #Box Creation Section
@@ -86,6 +92,16 @@ class WorkoutApp(toga.App):
         #Window Build Section
         self.main_window.content = add_workout_box
 
+
+#MARK: Utility Methods
+
+
+    #Used as a return to home window
+    def go_home(self, widget):
+            self.main_window.content = self.main_box
+
+
+    #Used to add workouts to DB for selection later
     async def add_workout(self, widget):
         try:
             self.cur.execute("INSERT INTO workouts VALUES(?, ?)", (self.add_wo_name.value, self.add_wo_area.value))
@@ -95,5 +111,7 @@ class WorkoutApp(toga.App):
         self.conn.commit()
         await self.main_window.info_dialog("Success!", "Workout added successfully!")
 
+
+#MARK: Driver method
 def main():
     return WorkoutApp()
