@@ -1,7 +1,3 @@
-"""
-My first application
-"""
-
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
@@ -53,6 +49,13 @@ class WorkoutApp(toga.App):
 
     #Edit window, used for editing workouts using the list from DB
     def show_edit_view(self, widget):
+
+        #Database Query Section
+        wo_data = self.cur.execute("SELECT name, area FROM workouts")
+        current_wo_list = []
+        for wo in wo_data.fetchall():
+            wo_name, wo_area = wo
+            current_wo_list.append(f"{wo_name} ({wo_area})")
         
         #Box Creation Section
         edit_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e"))
@@ -60,10 +63,12 @@ class WorkoutApp(toga.App):
         #Widget Creation Section
         exit_edit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
         test_label = toga.Label("This is the edit view", style=Pack(font_size=24, font_weight="bold", padding=10, color="#182375"))
+        wo_list = toga.Selection(items=current_wo_list, style=Pack(font_size=18, padding=10, color="#182375"))
 
         #Box Build Section
         edit_box.add(exit_edit_button)
         edit_box.add(test_label)
+        edit_box.add(wo_list)
 
         #Window Build Section
         self.main_window.content = edit_box
@@ -115,3 +120,58 @@ class WorkoutApp(toga.App):
 #MARK: Driver method
 def main():
     return WorkoutApp()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#MARK: Changes
+#Remove padding and change to margin as padding is deprecated
