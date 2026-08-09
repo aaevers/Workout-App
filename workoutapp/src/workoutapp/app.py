@@ -26,8 +26,9 @@ class WorkoutApp(toga.App):
             name TEXT NOT NULL,
             area TEXT NOT NULL,
             date TEXT NOT NULL,
+            sequence INTEGER NOT NULL,
             unit TEXT NOT NULL,
-            rep-time TEXT NOT NULL)""")
+            rep_time TEXT NOT NULL)""")
 
         #Box Creation Section
         self.main_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e")) #Using self.main_box so I can access it in other methods, not using self, widget argument in this method as no widget would passthrough on startup
@@ -69,20 +70,20 @@ class WorkoutApp(toga.App):
         #Widget Creation Section
         exit_edit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
         test_label = toga.Label("This is the edit view", style=Pack(font_size=24, font_weight="bold", padding=10, color="#ECEEF8"))
-        wo_list = toga.Selection(items=current_wo_list, style=Pack(font_size=18, padding=10, color="#ECEEF8"))
-        unit_value_list = toga.TextInput(placeholder="lbs/kg", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
-        unit_list = toga.Selection(items=["lbs", "kg"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
-        rep_value_list = toga.TextInput(placeholder="Reps/Hr:Min:Sec", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
-        rep_list = toga.Selection(items=["Reps", "Hr:Min:Sec"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
+        self.wo_list = toga.Selection(items=current_wo_list, style=Pack(font_size=18, padding=10, color="#ECEEF8"))
+        self.unit_value_list = toga.TextInput(placeholder="lbs/kg", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
+        self.unit_list = toga.Selection(items=["lbs", "kg"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
+        self.rep_value_list = toga.TextInput(placeholder="Reps/Hr:Min:Sec", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
+        self.rep_list = toga.Selection(items=["Reps", "Hr:Min:Sec"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
 
         #Box Build Section
         edit_box.add(exit_edit_button)
         edit_box.add(test_label)
-        edit_box.add(wo_list)
-        edit_box.add(unit_value_list)
-        edit_box.add(unit_list)
-        edit_box.add(rep_value_list)
-        edit_box.add(rep_list)
+        edit_box.add(self.wo_list)
+        edit_box.add(self.unit_value_list)
+        edit_box.add(self.unit_list)
+        edit_box.add(self.rep_value_list)
+        edit_box.add(self.rep_list)
 
         #Window Build Section
         self.main_window.content = edit_box
@@ -133,66 +134,16 @@ class WorkoutApp(toga.App):
 
     #Used to record workouts on the edit page
     async def record_workout(self, widget):
-        return #Need to finish later
+        try:
+            self.cur.execute("INSERT INTO recorded_wo_data VALUES(?, ?, ?, ?, ?, ?)", (self.wo_list.value, ))
+        except sqlite3.IntegrityError:
+            await self.main_window.info_dialog("Error", "Something is wrong with your workout data...")
+            return
+        self.conn.commit()
+        await self.main_window.info_dialog("Success!", "Workout recorded successfully!")
 
 
 #MARK: Driver method
 def main():
     return WorkoutApp()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#MARK: Changes
-#Remove padding and change to margin as padding is deprecated
-#Add a remove workout feature -- dunno where to put this
-#Implement record workout method
