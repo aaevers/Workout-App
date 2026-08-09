@@ -22,6 +22,12 @@ class WorkoutApp(toga.App):
         self.cur.execute("""CREATE TABLE IF NOT EXISTS workouts(
             name TEXT NOT NULL UNIQUE CHECK(length(trim(name)) > 0), 
             area TEXT NOT NULL)""")
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS recorded_wo_data(
+            name TEXT NOT NULL,
+            area TEXT NOT NULL,
+            date TEXT NOT NULL,
+            unit TEXT NOT NULL,
+            rep-time TEXT NOT NULL)""")
 
         #Box Creation Section
         self.main_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e")) #Using self.main_box so I can access it in other methods, not using self, widget argument in this method as no widget would passthrough on startup
@@ -62,13 +68,21 @@ class WorkoutApp(toga.App):
 
         #Widget Creation Section
         exit_edit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
-        test_label = toga.Label("This is the edit view", style=Pack(font_size=24, font_weight="bold", padding=10, color="#182375"))
-        wo_list = toga.Selection(items=current_wo_list, style=Pack(font_size=18, padding=10, color="#182375"))
+        test_label = toga.Label("This is the edit view", style=Pack(font_size=24, font_weight="bold", padding=10, color="#ECEEF8"))
+        wo_list = toga.Selection(items=current_wo_list, style=Pack(font_size=18, padding=10, color="#ECEEF8"))
+        unit_value_list = toga.TextInput(placeholder="lbs/kg", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
+        unit_list = toga.Selection(items=["lbs", "kg"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
+        rep_value_list = toga.TextInput(placeholder="Reps/Hr:Min:Sec", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
+        rep_list = toga.Selection(items=["Reps", "Hr:Min:Sec"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
 
         #Box Build Section
         edit_box.add(exit_edit_button)
         edit_box.add(test_label)
         edit_box.add(wo_list)
+        edit_box.add(unit_value_list)
+        edit_box.add(unit_list)
+        edit_box.add(rep_value_list)
+        edit_box.add(rep_list)
 
         #Window Build Section
         self.main_window.content = edit_box
@@ -84,7 +98,7 @@ class WorkoutApp(toga.App):
         exit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
         add_wo_label = toga.Label("Add workouts here, use workout name, area of body", style=Pack(font_size=24, font_weight="bold", padding=10, color="#182375"))
         self.add_wo_name = toga.TextInput(placeholder="Workout Name", style=Pack(font_size=18, padding=10, color="#ECEEF8"))
-        self.add_wo_area = toga.Selection(items=["Upper", "Lower", "Cardio"], style=Pack(font_size=18, padding=10, color="#182375"))
+        self.add_wo_area = toga.Selection(items=["Upper", "Lower", "Cardio"], style=Pack(font_size=18, padding=10, color="#ECEEF8"))
         add_wo_button = toga.Button("Accept?", on_press=self.add_workout, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
 
         #Box Build Section
@@ -115,6 +129,11 @@ class WorkoutApp(toga.App):
             return
         self.conn.commit()
         await self.main_window.info_dialog("Success!", "Workout added successfully!")
+
+
+    #Used to record workouts on the edit page
+    async def record_workout(self, widget):
+        return #Need to finish later
 
 
 #MARK: Driver method
@@ -175,3 +194,5 @@ def main():
 
 #MARK: Changes
 #Remove padding and change to margin as padding is deprecated
+#Add a remove workout feature -- dunno where to put this
+#Implement record workout method
