@@ -27,7 +27,9 @@ class WorkoutApp(toga.App):
             area TEXT NOT NULL,
             date TEXT NOT NULL,
             sequence INTEGER NOT NULL,
+            unit_value TEXT NOT NULL,
             unit TEXT NOT NULL,
+            rep_time_value TEXT NOT NULL,
             rep_time TEXT NOT NULL)""")
 
         #Box Creation Section
@@ -35,7 +37,7 @@ class WorkoutApp(toga.App):
         header_box = toga.Box(style=Pack(direction=COLUMN, background_color="#d6c724c1"))
 
         #Widget Creation Section
-        header_label = toga.Label(f"Today - {datetime.now().strftime("%b %d %Y")}", style=Pack(font_size=24, font_weight="bold", padding=10, color="#182375"))
+        header_label = toga.Label(f"Today - {datetime.now().strftime("%b %d %Y")}", style=Pack(font_size=24, font_weight="bold", padding=10, color="#182375")) 
         edit_button = toga.Button("Edit", on_press=self.show_edit_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
         add_workout_button = toga.Button("Add Workout", on_press=self.add_workout_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
 
@@ -58,11 +60,7 @@ class WorkoutApp(toga.App):
     def show_edit_view(self, widget):
 
         #Database Query Section
-        wo_data = self.cur.execute("SELECT name, area FROM workouts")
-        current_wo_list = []
-        for wo in wo_data.fetchall():
-            wo_name, wo_area = wo
-            current_wo_list.append(f"{wo_name} ({wo_area})")
+        current_wo_list = self.cur.execute("SELECT name FROM workouts").fetchall()
         
         #Box Creation Section
         edit_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e"))
@@ -75,6 +73,8 @@ class WorkoutApp(toga.App):
         self.unit_list = toga.Selection(items=["lbs", "kg"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
         self.rep_value_list = toga.TextInput(placeholder="Reps/Hr:Min:Sec", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
         self.rep_list = toga.Selection(items=["Reps", "Hr:Min:Sec"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
+        self.sequence = toga.NumberInput(value=0, min=0, step=1)
+        sumbit_button = toga.Button("Sumbit", on_press=self.record_workout)
 
         #Box Build Section
         edit_box.add(exit_edit_button)
@@ -84,6 +84,8 @@ class WorkoutApp(toga.App):
         edit_box.add(self.unit_list)
         edit_box.add(self.rep_value_list)
         edit_box.add(self.rep_list)
+        edit_box.add(self.sequence)
+        edit_box.add(sumbit_button)
 
         #Window Build Section
         self.main_window.content = edit_box
@@ -134,8 +136,9 @@ class WorkoutApp(toga.App):
 
     #Used to record workouts on the edit page
     async def record_workout(self, widget):
+        cur_name, cur_area = self.cur.execute(f"SELECT name, area FROM workouts WHERE name = ?", (self.wo_list.value,)).fetchone()
         try:
-            self.cur.execute("INSERT INTO recorded_wo_data VALUES(?, ?, ?, ?, ?, ?)", (self.wo_list.value, ))
+            self.cur.execute("INSERT INTO recorded_wo_data VALUES(?, ?, ?, ?, ?, ?, ?, ?)", (cur_name, cur_area, datetime.now().strftime("%b %d %Y"), int(self.sequence.value), self.unit_value_list.value, self.unit_list.value, self.rep_value_list.value, self.rep_list.value))
         except sqlite3.IntegrityError:
             await self.main_window.info_dialog("Error", "Something is wrong with your workout data...")
             return
