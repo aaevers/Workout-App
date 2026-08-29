@@ -35,16 +35,21 @@ class WorkoutApp(toga.App):
         #Box Creation Section
         self.main_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e")) #Using self.main_box so I can access it in other methods, not using self, widget argument in this method as no widget would passthrough on startup
         header_box = toga.Box(style=Pack(direction=COLUMN, background_color="#d6c724c1"))
+        curr_day_box = toga.Box(style=Pack(direction=COLUMN, background_color="#38374ed7", margin=10))
+        scroll_box = toga.ScrollContainer(content=curr_day_box, style=Pack(direction=COLUMN, height=250))
 
         #Widget Creation Section
-        header_label = toga.Label(f"Today - {datetime.now().strftime("%b %d %Y")}", style=Pack(font_size=24, font_weight="bold", margin=10, color="#182375")) 
+        header_label = toga.Label(f"Today - {datetime.now().strftime("%b %d %Y")}", style=Pack(font_size=24, font_weight="bold", margin=10, color="#182375"))
+        self.curr_day_label = toga.Label(self.retrieve_workout(), style=Pack(font_size=12, margin=10, color="#FFFFFF"))
         edit_button = toga.Button("Edit", on_press=self.show_edit_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
         add_workout_button = toga.Button("Add Workout", on_press=self.add_workout_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
 
         #Box Build Section
         self.main_box.add(header_box)
+        self.main_box.add(scroll_box)
         self.main_box.add(edit_button)
         self.main_box.add(add_workout_button)
+        curr_day_box.add(self.curr_day_label)
         header_box.add(header_label)
 
         #Window Build Section
@@ -120,6 +125,7 @@ class WorkoutApp(toga.App):
 
     #Used as a return to home window
     def go_home(self, widget):
+            self.curr_day_label.text = self.retrieve_workout() #This is what will update the current day overview text, necesarry for updates, otherwise you'd need to close the app and reopen
             self.main_window.content = self.main_box
 
 
@@ -145,6 +151,17 @@ class WorkoutApp(toga.App):
         self.conn.commit()
         await self.main_window.info_dialog("Success!", "Workout recorded successfully!")
 
+
+    #Retrieve Workout Data, used for the search or current day info
+    def retrieve_workout(self):
+        today_list = self.cur.execute(f"SELECT * FROM recorded_wo_data WHERE date = ?", (datetime.now().strftime("%b %d %Y"),)).fetchall()
+        return_string = ""
+        for i in range(len(today_list)):
+            if(i != (len(today_list) - 1)):
+                return_string += f"{today_list[i][0]} | {today_list[i][1]} | {today_list[i][6]} {today_list[i][7]} @ {today_list[i][4]} {today_list[i][5]} | Sequence: {today_list[i][3]}\n\n"
+            else:
+                return_string += f"{today_list[i][0]} | {today_list[i][1]} | {today_list[i][6]} {today_list[i][7]} @ {today_list[i][4]} {today_list[i][5]} | Sequence: {today_list[i][3]}"
+        return return_string
 
 #MARK: Driver method
 def main():
