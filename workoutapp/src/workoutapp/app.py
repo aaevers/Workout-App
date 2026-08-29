@@ -43,12 +43,14 @@ class WorkoutApp(toga.App):
         self.curr_day_label = toga.Label(self.retrieve_workout(), style=Pack(font_size=12, margin=10, color="#FFFFFF"))
         edit_button = toga.Button("Edit", on_press=self.show_edit_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
         add_workout_button = toga.Button("Add Workout", on_press=self.add_workout_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
+        previous_workout_button = toga.Button("Previous Workouts", on_press=self.previous_workout_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
 
         #Box Build Section
         self.main_box.add(header_box)
         self.main_box.add(scroll_box)
         self.main_box.add(edit_button)
         self.main_box.add(add_workout_button)
+        self.main_box.add(previous_workout_button)
         curr_day_box.add(self.curr_day_label)
         header_box.add(header_label)
 
@@ -118,6 +120,22 @@ class WorkoutApp(toga.App):
 
         #Window Build Section
         self.main_window.content = add_workout_box
+
+
+    #Window to show previous workouts based on date
+    def previous_workout_view(self, widget):
+
+        #Box Creation Section
+        previous_workout_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e"))
+
+        #Widget Creation Seciton
+        exit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
+
+        #Box Build Section
+        previous_workout_box.add(exit_button)
+
+        #Window Build Section
+        self.main_window.content = previous_workout_box
 
 
 #MARK: Utility Methods
