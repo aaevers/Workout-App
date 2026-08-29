@@ -40,7 +40,7 @@ class WorkoutApp(toga.App):
 
         #Widget Creation Section
         header_label = toga.Label(f"Today - {datetime.now().strftime("%b %d %Y")}", style=Pack(font_size=24, font_weight="bold", margin=10, color="#182375"))
-        self.curr_day_label = toga.Label(self.retrieve_workout(), style=Pack(font_size=12, margin=10, color="#FFFFFF"))
+        self.curr_day_label = toga.Label(self.retrieve_workout((datetime.now().strftime("%b %d %Y"),)), style=Pack(font_size=12, margin=10, color="#FFFFFF"))
         edit_button = toga.Button("Edit", on_press=self.show_edit_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
         add_workout_button = toga.Button("Add Workout", on_press=self.add_workout_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
         previous_workout_button = toga.Button("Previous Workouts", on_press=self.previous_workout_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
@@ -143,7 +143,7 @@ class WorkoutApp(toga.App):
 
     #Used as a return to home window
     def go_home(self, widget):
-            self.curr_day_label.text = self.retrieve_workout() #This is what will update the current day overview text, necesarry for updates, otherwise you'd need to close the app and reopen
+            self.curr_day_label.text = self.retrieve_workout((datetime.now().strftime("%b %d %Y"),)) #This is what will update the current day overview text, necesarry for updates, otherwise you'd need to close the app and reopen
             self.main_window.content = self.main_box
 
 
@@ -171,8 +171,8 @@ class WorkoutApp(toga.App):
 
 
     #Retrieve Workout Data, used for the search or current day info
-    def retrieve_workout(self):
-        today_list = self.cur.execute(f"SELECT * FROM recorded_wo_data WHERE date = ?", (datetime.now().strftime("%b %d %Y"),)).fetchall()
+    def retrieve_workout(self, searched_date):
+        today_list = self.cur.execute(f"SELECT * FROM recorded_wo_data WHERE date = ?", searched_date).fetchall()
         return_string = ""
         for i in range(len(today_list)):
             if(i != (len(today_list) - 1)):
