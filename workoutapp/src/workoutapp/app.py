@@ -37,7 +37,7 @@ class WorkoutApp(toga.App):
         header_box = toga.Box(style=Pack(direction=COLUMN, background_color="#d6c724c1"))
 
         #Widget Creation Section
-        header_label = toga.Label(f"Today - {datetime.now().strftime("%b %d %Y")}", style=Pack(font_size=24, font_weight="bold", padding=10, color="#182375")) 
+        header_label = toga.Label(f"Today - {datetime.now().strftime("%b %d %Y")}", style=Pack(font_size=24, font_weight="bold", margin=10, color="#182375")) 
         edit_button = toga.Button("Edit", on_press=self.show_edit_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
         add_workout_button = toga.Button("Add Workout", on_press=self.add_workout_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
 
@@ -67,8 +67,8 @@ class WorkoutApp(toga.App):
 
         #Widget Creation Section
         exit_edit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
-        test_label = toga.Label("This is the edit view", style=Pack(font_size=24, font_weight="bold", padding=10, color="#ECEEF8"))
-        self.wo_list = toga.Selection(items=current_wo_list, style=Pack(font_size=18, padding=10, color="#ECEEF8"))
+        test_label = toga.Label("This is the edit view", style=Pack(font_size=24, font_weight="bold", margin=10, color="#ECEEF8"))
+        self.wo_list = toga.Selection(items=current_wo_list, style=Pack(font_size=18, margin=10, color="#ECEEF8"))
         self.unit_value_list = toga.TextInput(placeholder="lbs/kg", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
         self.unit_list = toga.Selection(items=["lbs", "kg"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
         self.rep_value_list = toga.TextInput(placeholder="Reps/Hr:Min:Sec", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
@@ -99,9 +99,9 @@ class WorkoutApp(toga.App):
 
         #Widget Creation Section
         exit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
-        add_wo_label = toga.Label("Add workouts here, use workout name, area of body", style=Pack(font_size=24, font_weight="bold", padding=10, color="#182375"))
-        self.add_wo_name = toga.TextInput(placeholder="Workout Name", style=Pack(font_size=18, padding=10, color="#ECEEF8"))
-        self.add_wo_area = toga.Selection(items=["Upper", "Lower", "Cardio"], style=Pack(font_size=18, padding=10, color="#ECEEF8"))
+        add_wo_label = toga.Label("Add workouts here, use workout name, area of body", style=Pack(font_size=24, font_weight="bold", margin=10, color="#182375"))
+        self.add_wo_name = toga.TextInput(placeholder="Workout Name", style=Pack(font_size=18, margin=10, color="#ECEEF8"))
+        self.add_wo_area = toga.Selection(items=["Upper", "Lower", "Cardio"], style=Pack(font_size=18, margin=10, color="#ECEEF8"))
         add_wo_button = toga.Button("Accept?", on_press=self.add_workout, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
 
         #Box Build Section
