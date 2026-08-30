@@ -122,6 +122,8 @@ class WorkoutApp(toga.App):
 
         #Box Creation Section
         previous_workout_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e"))
+        selected_day_box = toga.Box(style=Pack(direction=COLUMN, background_color="#38374ed7", margin=10))
+        scroll_box = toga.ScrollContainer(content=selected_day_box, style=Pack(direction=COLUMN, height=250))
 
         #Widget Creation Seciton
         exit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
@@ -129,9 +131,10 @@ class WorkoutApp(toga.App):
         self.past_workout = toga.Label("Select a date to get started!", style=Pack(font_size=12, margin=10, color="#FFFFFF"))
 
         #Box Build Section
+        selected_day_box.add(self.past_workout)
         previous_workout_box.add(exit_button)
         previous_workout_box.add(self.date_selector)
-        previous_workout_box.add(self.past_workout)
+        previous_workout_box.add(scroll_box)
 
         #Window Build Section
         self.main_window.content = previous_workout_box
