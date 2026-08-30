@@ -133,6 +133,7 @@ class WorkoutApp(toga.App):
         self.past_workout = toga.Label("Select a date to get started!", style=Pack(font_size=12, margin=10, color="#FFFFFF"))
         removal_label = toga.Label("Select Workout Below to Remove", style=Pack(font_size=14, margin_top=100, color="#FFFFFF"))
         self.removal_list = toga.Selection(items=[], style=Pack(font_size=12, margin=10, color="#FFFFFF"))
+        remove_button = toga.Button("Delete Workout", on_press=self.remove_workout, style=Pack(margin_top=50))
 
         #Box Build Section
         selected_day_box.add(self.past_workout)
@@ -143,12 +144,27 @@ class WorkoutApp(toga.App):
         previous_workout_box.add(scroll_box)
         previous_workout_box.add(open_space_box)
         previous_workout_box.add(removal_box)
+        previous_workout_box.add(remove_button)
 
         #Window Build Section
         self.main_window.content = previous_workout_box
 
 
 #MARK: Utility Methods
+
+
+    async def remove_workout(self, widget):
+        delimited_list = self.removal_list.value.split(" | ")
+        delimited_list[3] = "".join(filter(str.isdigit, delimited_list[3]))
+
+        try:
+            self.cur.execute("DELETE FROM recorded_wo_data WHERE date = ? AND name = ? AND area = ? AND sequence = ?", (self.date_selected, delimited_list[0], delimited_list[1], delimited_list[3]))
+            await self.main_window.info_dialog("Success!", "Workout deleted successfully!")
+        except Exception:
+            await self.main_window.info_dialog("Error", "Something went wrong...")
+            return
+        self.conn.commit()
+        return
 
 
     def previous_workout_utility(self, widget):
@@ -202,6 +218,7 @@ class WorkoutApp(toga.App):
                 day = self.date_selector.value.day
         self.past_workout.text = self.retrieve_workout(((f"{month} {day} {self.date_selector.value.year}"),))
         self.removal_list.items = self.retrieve_workout_list(((f"{month} {day} {self.date_selector.value.year}"),))
+        self.date_selected = f"{month} {day} {self.date_selector.value.year}"
         
 
 
