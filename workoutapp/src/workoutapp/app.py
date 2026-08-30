@@ -124,17 +124,25 @@ class WorkoutApp(toga.App):
         previous_workout_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e"))
         selected_day_box = toga.Box(style=Pack(direction=COLUMN, background_color="#38374ed7", margin=10))
         scroll_box = toga.ScrollContainer(content=selected_day_box, style=Pack(direction=COLUMN, height=250))
+        open_space_box = toga.Box(style=Pack(direction=COLUMN, height=150, background_color="#15182e"))
+        removal_box = toga.Box(style=Pack(direction=COLUMN, background_color="#38374ed7"))
 
         #Widget Creation Seciton
         exit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
-        self.date_selector = toga.DateInput(on_change=self.format_date_select)
+        self.date_selector = toga.DateInput(on_change=self.previous_workout_utility)
         self.past_workout = toga.Label("Select a date to get started!", style=Pack(font_size=12, margin=10, color="#FFFFFF"))
+        removal_label = toga.Label("Select Workout Below to Remove", style=Pack(font_size=14, margin_top=100, color="#FFFFFF"))
+        self.removal_list = toga.Selection(items=[], style=Pack(font_size=12, margin=10, color="#FFFFFF"))
 
         #Box Build Section
         selected_day_box.add(self.past_workout)
+        open_space_box.add(removal_label)
+        removal_box.add(self.removal_list)
         previous_workout_box.add(exit_button)
         previous_workout_box.add(self.date_selector)
         previous_workout_box.add(scroll_box)
+        previous_workout_box.add(open_space_box)
+        previous_workout_box.add(removal_box)
 
         #Window Build Section
         self.main_window.content = previous_workout_box
@@ -143,7 +151,7 @@ class WorkoutApp(toga.App):
 #MARK: Utility Methods
 
 
-    def format_date_select(self, widget):
+    def previous_workout_utility(self, widget):
         match self.date_selector.value.month:
             case 1:
                 month = "Jan"
@@ -193,7 +201,8 @@ class WorkoutApp(toga.App):
             case _:
                 day = self.date_selector.value.day
         self.past_workout.text = self.retrieve_workout(((f"{month} {day} {self.date_selector.value.year}"),))
-        print(f"{month} {self.date_selector.value.day} {self.date_selector.value.year}")
+        self.removal_list.items = self.retrieve_workout_list(((f"{month} {day} {self.date_selector.value.year}"),))
+        
 
 
     #Used as a return to home window
@@ -235,6 +244,16 @@ class WorkoutApp(toga.App):
             else:
                 return_string += f"{today_list[i][0]} | {today_list[i][1]} | {today_list[i][6]} {today_list[i][7]} @ {today_list[i][4]} {today_list[i][5]} | Sequence: {today_list[i][3]}"
         return return_string
+
+
+    #Retrieve Workout Data, used for the search or current day info in list form
+    def retrieve_workout_list(self, searched_date):
+        today_list = self.cur.execute(f"SELECT * FROM recorded_wo_data WHERE date = ?", searched_date).fetchall()
+        return_list = []
+        for item in today_list:
+                return_list.append(f"{item[0]} | {item[1]} | {item[6]} {item[7]} @ {item[4]} {item[5]} | Sequence: {item[3]}")
+        return return_list
+
 
 #MARK: Driver method
 def main():
