@@ -4,11 +4,6 @@ from toga.style.pack import COLUMN, ROW
 import sqlite3
 from datetime import datetime
 
-def greeting(name):
-        if name:
-            return f"Hello, {name}!"
-        else:
-            return "Hey pookie"
 
 class WorkoutApp(toga.App):
 
@@ -130,15 +125,72 @@ class WorkoutApp(toga.App):
 
         #Widget Creation Seciton
         exit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
+        self.date_selector = toga.DateInput(on_change=self.format_date_select)
+        self.past_workout = toga.Label("Select a date to get started!", style=Pack(font_size=12, margin=10, color="#FFFFFF"))
 
         #Box Build Section
         previous_workout_box.add(exit_button)
+        previous_workout_box.add(self.date_selector)
+        previous_workout_box.add(self.past_workout)
 
         #Window Build Section
         self.main_window.content = previous_workout_box
 
 
 #MARK: Utility Methods
+
+
+    def format_date_select(self, widget):
+        match self.date_selector.value.month:
+            case 1:
+                month = "Jan"
+            case 2:
+                month = "Feb"
+            case 3:
+                month = "Mar"
+            case 4:
+                month = "Apr"
+            case 5:
+                month = "May"
+            case 6:
+                month = "Jun"
+            case 7:
+                month = "Jul"
+            case 8:
+                month = "Aug"
+            case 9:
+                month = "Sep"
+            case 10:
+                month = "Oct"
+            case 11:
+                month = "Nov"
+            case 12:
+                month = "Dec"
+            case _:
+                month = ""
+        match self.date_selector.value.day:
+            case 1:
+                day = "01"
+            case 2:
+                day = "02"
+            case 3:
+                day = "03"
+            case 4:
+                day = "04"
+            case 5:
+                day = "05"
+            case 6:
+                day = "06"
+            case 7:
+                day = "07"
+            case 8:
+                day = "08"
+            case 9:
+                day = "09"
+            case _:
+                day = self.date_selector.value.day
+        self.past_workout.text = self.retrieve_workout(((f"{month} {day} {self.date_selector.value.year}"),))
+        print(f"{month} {self.date_selector.value.day} {self.date_selector.value.year}")
 
 
     #Used as a return to home window
