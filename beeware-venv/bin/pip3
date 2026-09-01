@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/home/aiden@EVERS.LOCAL/Programming/Workout App/Workout-App/beeware-venv/bin/python" "$0" "$@"
-' '''
+#!/home/aiden@EVERS.LOCAL/Documents/Programming/Workout-App/beeware-venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
