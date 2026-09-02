@@ -28,7 +28,7 @@ class WorkoutApp(toga.App):
             rep_time TEXT NOT NULL)""")
 
         #Box Creation Section
-        self.main_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e")) #Using self.main_box so I can access it in other methods, not using self, widget argument in this method as no widget would passthrough on startup
+        self.main_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#5863b4")) #Using self.main_box so I can access it in other methods, not using self, widget argument in this method as no widget would passthrough on startup
         header_box = toga.Box(style=Pack(direction=COLUMN, background_color="#d6c724c1"))
         curr_day_box = toga.Box(style=Pack(direction=COLUMN, background_color="#38374ed7", margin=10))
         scroll_box = toga.ScrollContainer(content=curr_day_box, style=Pack(direction=COLUMN, height=250))
@@ -36,7 +36,7 @@ class WorkoutApp(toga.App):
         #Widget Creation Section
         header_label = toga.Label(f"Today - {datetime.now().strftime("%b %d %Y")}", style=Pack(font_size=24, font_weight="bold", margin=10, color="#182375"))
         self.curr_day_label = toga.Label(self.retrieve_workout((datetime.now().strftime("%b %d %Y"),)), style=Pack(font_size=12, margin=10, color="#FFFFFF"))
-        edit_button = toga.Button("Edit", on_press=self.show_edit_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
+        edit_button = toga.Button("Record", on_press=self.show_edit_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
         add_workout_button = toga.Button("Add Workout", on_press=self.add_workout_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
         previous_workout_button = toga.Button("Previous Workouts", on_press=self.previous_workout_view, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
 
@@ -65,16 +65,16 @@ class WorkoutApp(toga.App):
         current_wo_list = self.cur.execute("SELECT name FROM workouts").fetchall()
         
         #Box Creation Section
-        edit_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e"))
+        edit_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#5863b4"))
 
         #Widget Creation Section
         exit_edit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
-        test_label = toga.Label("This is the edit view", style=Pack(font_size=24, font_weight="bold", margin=10, color="#ECEEF8"))
-        self.wo_list = toga.Selection(items=current_wo_list, style=Pack(font_size=18, margin=10, color="#ECEEF8"))
-        self.unit_value_list = toga.TextInput(placeholder="lbs/kg", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
-        self.unit_list = toga.Selection(items=["lbs", "kg"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
-        self.rep_value_list = toga.TextInput(placeholder="Reps/Hr:Min:Sec", style=Pack(font_size=18, margin=0, color="#ECEEF8"))
-        self.rep_list = toga.Selection(items=["Reps", "Hr:Min:Sec"], style=Pack(font_size=18, margin=0, color="#ECEEF8"))
+        test_label = toga.Label("This is the record view", style=Pack(font_size=24, font_weight="bold", margin=10, color="#FFFFFF"))
+        self.wo_list = toga.Selection(items=current_wo_list, style=Pack(font_size=18, margin=10, color="#FFFFFF"))
+        self.unit_value_list = toga.TextInput(placeholder="lbs/kg", style=Pack(font_size=18, margin=0, color="#FFFFFF"))
+        self.unit_list = toga.Selection(items=["lbs", "kg", "Hr:Min:Sec"], style=Pack(font_size=18, margin=0, color="#FFFFFF"))
+        self.rep_value_list = toga.TextInput(placeholder="Reps/Hr:Min:Sec", style=Pack(font_size=18, margin=0, color="#FFFFFF"))
+        self.rep_list = toga.Selection(items=["Reps", "mi", "km"], style=Pack(font_size=18, margin=0, color="#FFFFFF"))
         self.sequence = toga.NumberInput(value=0, min=0, step=1)
         sumbit_button = toga.Button("Sumbit", on_press=self.record_workout)
 
@@ -97,13 +97,13 @@ class WorkoutApp(toga.App):
     def add_workout_view(self, widget):
 
         #Box Creation Section
-        add_workout_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e"))
+        add_workout_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#5863b4"))
 
         #Widget Creation Section
         exit_button = toga.Button(icon=toga.Icon("resources/x"), on_press=self.go_home)
         add_wo_label = toga.Label("Add workouts here, use workout name, area of body", style=Pack(font_size=24, font_weight="bold", margin=10, color="#182375"))
-        self.add_wo_name = toga.TextInput(placeholder="Workout Name", style=Pack(font_size=18, margin=10, color="#ECEEF8"))
-        self.add_wo_area = toga.Selection(items=["Upper", "Lower", "Cardio"], style=Pack(font_size=18, margin=10, color="#ECEEF8"))
+        self.add_wo_name = toga.TextInput(placeholder="Workout Name", style=Pack(font_size=18, margin=10, color="#FFFFFF"))
+        self.add_wo_area = toga.Selection(items=["Upper", "Lower", "Cardio"], style=Pack(font_size=18, margin=10, color="#FFFFFF"))
         add_wo_button = toga.Button("Accept?", on_press=self.add_workout, style=Pack(width=200, height=200, background_color="#182375", color="#d6c724c1"))
 
         #Box Build Section
@@ -121,10 +121,10 @@ class WorkoutApp(toga.App):
     def previous_workout_view(self, widget):
 
         #Box Creation Section
-        previous_workout_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#15182e"))
+        previous_workout_box = toga.Box(style=Pack(direction=COLUMN, flex=1, background_color="#5863b4"))
         selected_day_box = toga.Box(style=Pack(direction=COLUMN, background_color="#38374ed7", margin=10))
         scroll_box = toga.ScrollContainer(content=selected_day_box, style=Pack(direction=COLUMN, height=250))
-        open_space_box = toga.Box(style=Pack(direction=COLUMN, height=150, background_color="#15182e"))
+        open_space_box = toga.Box(style=Pack(direction=COLUMN, height=150, background_color="#5863b4"))
         removal_box = toga.Box(style=Pack(direction=COLUMN, background_color="#38374ed7"))
 
         #Widget Creation Seciton
